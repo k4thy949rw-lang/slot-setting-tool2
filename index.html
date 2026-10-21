@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#101827">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="リコリコ判別">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icon.svg">
+<title>スマスロ設定判別</title>
+<style>
+:root{color-scheme:dark;--bg:#0b1220;--panel:#151f30;--line:#29364a;--text:#f4f7fb;--muted:#aab6c8;--blue:#70a7ff;--green:#43d6a1;--amber:#ffca6a}
+*{box-sizing:border-box}body{margin:0;background:linear-gradient(180deg,#101827,var(--bg) 42%);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;padding:env(safe-area-inset-top) 14px calc(22px + env(safe-area-inset-bottom));}
+main{max-width:620px;margin:auto}.top{padding:18px 4px 12px}.eyebrow{color:var(--blue);font-size:12px;letter-spacing:.12em;font-weight:800}.top h1{font-size:25px;margin:7px 0}.top p{margin:0;color:var(--muted);font-size:13px;line-height:1.6}
+.card{background:rgba(21,31,48,.96);border:1px solid var(--line);border-radius:18px;padding:16px;margin:12px 0}.card h2{font-size:16px;margin:0 0 14px}.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.field{display:flex;flex-direction:column;gap:6px}.field.full{grid-column:1/-1}label{font-size:12px;color:var(--muted)}input,select,textarea{width:100%;background:#0d1625;border:1px solid #34445d;color:var(--text);border-radius:11px;padding:12px;font-size:16px;min-width:0}textarea{min-height:76px;resize:vertical}.hint{font-size:11px;color:var(--muted);line-height:1.5;margin-top:9px}.btn{width:100%;border:0;border-radius:13px;background:linear-gradient(90deg,#458aff,#6b75ff);color:white;font-size:16px;font-weight:800;padding:15px;margin-top:4px}.btn.secondary{background:#26354b;border:1px solid #3a4b63}.result{display:none}.result.show{display:block}.pill{display:inline-block;background:#20334b;color:#b9d4ff;border-radius:999px;padding:5px 9px;font-size:11px;font-weight:700}.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.stat{background:#0d1625;border-radius:12px;padding:11px}.stat small{display:block;color:var(--muted);font-size:11px}.stat strong{display:block;margin-top:6px;font-size:17px}.barrow{margin:12px 0}.barhead{display:flex;justify-content:space-between;font-size:13px;margin-bottom:6px}.track{height:8px;background:#28364a;border-radius:99px;overflow:hidden}.fill{height:100%;background:linear-gradient(90deg,#42d6a1,#70a7ff);border-radius:99px}.notice{font-size:12px;color:var(--muted);line-height:1.65}.actions{display:flex;gap:8px}.actions button{flex:1}.history-item{border-top:1px solid var(--line);padding:12px 0;font-size:13px}.history-item:first-child{border-top:0}.footer{color:#8290a5;font-size:11px;line-height:1.6;padding:8px 4px 20px}
+</style>
+</head>
+<body>
+<main>
+<header class="top">
+<div class="eyebrow">SLOT ANALYZER / MOBILE</div>
+<h1>スマスロ設定判別</h1>
+<p>リコリス・リコイル実戦メモ<br>設定推測と続行判断の材料をまとめて記録</p>
+</header>
+<section class="card">
+<h2>実戦データ</h2>
+<div class="grid">
+<div class="field full"><label for="machine">機種</label><select id="machine"><option>L リコリス・リコイル</option><option>スマスロ SAO2</option><option>スマスロ 北斗の拳</option><option>モンキーターンV</option><option>その他</option></select></div>
+<div class="field"><label for="games">通常時ゲーム数</label><input id="games" type="number" min="1" value="3000"></div>
+<div class="field"><label for="cz">CZ初当たり回数</label><input id="cz" type="number" min="0" value="15"></div>
+<div class="field"><label for="at">AT初当たり回数</label><input id="at" type="number" min="0" value="9"></div>
+<div class="field"><label for="bell">共通ベル回数</label><input id="bell" type="number" min="0" value="32"></div>
+<div class="field"><label for="investment">総投資額（円）</label><input id="investment" type="number" min="0" value="10000"></div>
+<div class="field"><label for="coins">持ちメダル（枚）</label><input id="coins" type="number" min="0" value="500"></div>
+<div class="field"><label for="hint">確定演出</label><select id="hint"><option value="1">なし／未確認</option><option value="2">設定2以上</option><option value="3">設定3以上</option><option value="4">設定4以上</option><option value="5">設定5以上</option><option value="6">設定6確定</option></select></div>
+<div class="field"><label for="trophy">トロフィー</label><select id="trophy"><option value="1">なし／未確認</option><option value="2">銅（下限2）</option><option value="3">銀（下限3）</option><option value="4">金（下限4）</option><option value="5">キリン柄（下限5）</option><option value="6">虹（下限6）</option></select></div>
+<div class="field full"><label for="memo">示唆・状況メモ</label><textarea id="memo" placeholder="例：終了画面、直撃、朝イチ状況、現在ゲーム数など"></textarea></div>
+</div>
+<p class="hint">数値は実戦中に更新して使えます。設定示唆の選択肢は一般的な入力枠です。機種ごとの示唆条件は必ず最新の解析情報と照合してください。</p>
+<button class="btn" id="judge">データを判定</button>
+</section>
+<section class="card result" id="result" aria-live="polite">
+<h2>判定メモ</h2>
+<div class="pill" id="status">推測結果</div>
+<div class="stats" style="margin-top:12px">
+<div class="stat"><small>CZ実績</small><strong id="czrate">—</strong></div>
+<div class="stat"><small>AT実績</small><strong id="atrate">—</strong></div>
+<div class="stat"><small>共通ベル実績</small><strong id="bellrate">—</strong></div>
+</div>
+<div id="probabilities"></div>
+<p class="notice" id="advice"></p>
+<div class="actions"><button class="btn secondary" id="save">履歴に保存</button><button class="btn secondary" id="share">結果をコピー</button></div>
+</section>
+<section class="card">
+<h2>実戦履歴</h2>
+<div id="history"><p class="notice">保存した記録がここに表示されます。この端末のブラウザ内に保存されます。</p></div>
+<button class="btn secondary" id="clear">履歴をすべて削除</button>
+</section>
+<p class="footer">このツールは実戦記録・推測補助用です。公表値の確認が取れていない設定差は推測計算に使っていません。表示結果は設定を保証するものではありません。遊技の判断は予算と時間の上限を決めたうえで行ってください。</p>
+</main>
+<script>
+const $=id=>document.getElementById(id);
+const ids=['machine','games','cz','at','bell','investment','coins','hint','trophy','memo'];
+function read(){const o={};ids.forEach(id=>o[id]=$(id).value);return o}
+function num(id){return Math.max(0,Number($(id).value)||0)}
+function fmt(n){return Math.round(n).toLocaleString('ja-JP')}
+function renderHistory(){
+ const h=JSON.parse(localStorage.getItem('lycorisHistory')||'[]');
+ $('history').innerHTML=h.length?h.map((x,i)=>`<div class="history-item"><strong>${esc(x.machine)}</strong> · ${esc(x.date)}<br>通常 ${esc(x.games)}G / CZ ${esc(x.cz)} / AT ${esc(x.at)} / 共通ベル ${esc(x.bell)}<br><span class="notice">${esc(x.status)}</span></div>`).join(''):'<p class="notice">保存した記録はありません。</p>';
+}
+function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+let lastResult='';
+$('judge').addEventListener('click',()=>{
+ const d=read(),g=Number(d.games),cz=Number(d.cz),at=Number(d.at),bell=Number(d.bell);
+ if(!Number.isFinite(g)||g<=0||[cz,at,bell].some(v=>!Number.isInteger(v)||v<0)){alert('ゲーム数は1以上、回数は0以上の整数で入力してください。');return}
+ const floor=Math.max(Number(d.hint),Number(d.trophy));
+ const lines=[];
+ lines.push(`CZ実績：${cz?`1/${(g/cz).toFixed(1)}`:'当選なし'}`);
+ lines.push(`AT実績：${at?`1/${(g/at).toFixed(1)}`:'当選なし'}`);
+ lines.push(`共通ベル実績：${bell?`1/${(g/bell).toFixed(1)}`:'未確認'}`);
+ $('czrate').textContent=cz?`1/${(g/cz).toFixed(1)}`:'なし';
+ $('atrate').textContent=at?`1/${(g/at).toFixed(1)}`:'なし';
+ $('bellrate').textContent=bell?`1/${(g/bell).toFixed(1)}`:'未確認';
+ const floorLabel=floor>1?`設定${floor}以上の確定情報を入力`:'確定示唆なし';
+ $('status').textContent=floorLabel;
+ // No probabilities are fabricated; until verified, show a transparent evidence checklist.
+ $('probabilities').innerHTML=`<div class="barrow"><div class="barhead"><span>設定1〜6の確率推定</span><span>機種データ登録待ち</span></div><div class="track"><div class="fill" style="width:8%"></div></div></div>`;
+ let advice='CZ・AT・共通ベルの実績を記録しました。正確な設定期待度を出すには、機種の最新公表値と計測条件を確認して登録する必要があります。';
+ if(floor>=4) advice='設定4以上を示す確定情報を選択しています。演出の機種・条件が正しいか確認してください。設定面では続行を検討する材料ですが、投資上限・時間・交換率も考慮してください。';
+ else if(floor>=2) advice=`設定${floor}以上を示す情報を選択しています。演出条件を確認し、ほかの設定差と合わせて判断してください。`;
+ else advice+='示唆がないことだけで低設定とは断定できません。設定推測と天井・ゾーンの期待値は分けて判断してください。';
+ $('advice').textContent=advice;
+ lastResult=[d.machine,...lines,floorLabel,advice,d.memo?`メモ：${d.memo}`:''].filter(Boolean).join('\n');
+ $('result').classList.add('show');
+});
+$('save').addEventListener('click',()=>{
+ if(!lastResult){alert('先に「データを判定」を押してください。');return}
+ const d=read(),h=JSON.parse(localStorage.getItem('lycorisHistory')||'[]');
+ h.unshift({...d,date:new Date().toLocaleString('ja-JP'),status:$('status').textContent});
+ localStorage.setItem('lycorisHistory',JSON.stringify(h.slice(0,100)));renderHistory();
+});
+$('share').addEventListener('click',async()=>{
+ if(!lastResult){alert('先に「データを判定」を押してください。');return}
+ try{await navigator.clipboard.writeText(lastResult);alert('結果をコピーしました。')}catch(e){prompt('結果をコピーしてください',lastResult)}
+});
+$('clear').addEventListener('click',()=>{if(confirm('保存した履歴をすべて削除しますか？')){localStorage.removeItem('lycorisHistory');renderHistory()}});
+renderHistory();
+if('serviceWorker' in navigator && location.protocol.startsWith('http')) window.addEventListener('load',()=>navigator.serviceWorker.register('./service-worker.js').catch(()=>{}));
+</script>
+</body>
+</html>
